@@ -1,4 +1,4 @@
-name: incloud
+name: telescope-incloud
 
 on:
     workflow_dispatch:
