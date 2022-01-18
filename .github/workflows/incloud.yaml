@@ -8,6 +8,9 @@ on:
           description: "Please enter the domain name to be scanned"
           required: true
           default: "csleasing.com.cn"
+env:
+  searchDomain: "${{ github.event.inputs.searchDomain }}"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,8 +25,6 @@ jobs:
 
       - name: Setup Dependencies
         run: sudo apt-get install libpcap-dev 
-           
-        
 
       - name: Cache Go
         id: cache-go
