@@ -1,8 +1,13 @@
 name: incloud
 
 on:
+#    workflow_dispatch: 推送测试选择，完成后使用如下
     workflow_dispatch:
-
+      inputs:
+        searchDomain:
+          description: "Please enter the domain name to be scanned"
+          required: true
+          default: "csleasing.com.cn"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -43,6 +48,8 @@ jobs:
 
       - name: Running SubFinder for passive DNS enumeration
         run: |
+          echo "${{ env.searchDomain }}" > input/domains.txt
+          cat input/domains.txt
           subfinder -dL input/domains.txt -config config/subfinder-config.yaml -o output/passive_subdomains.txt
         shell: bash
 
@@ -84,22 +91,42 @@ jobs:
       - name: Sorting the output results
         run: |
           find output -type f -exec sort {} -o {} \;
+          tar -czf ${{ env.searchDomain }}-attachments.tar.gz output
+          ls -la
+          echo "扫描完成，这里是附件" > result.html
         shell: bash
 
-      - name: Create local changes
-        run: |
-          git add output/active_ports.txt
-          git add output/active_urls.txt
-          git add output/dirout.csv
-          git add output/webcrack.txt
-          
-      - name: Commit results to Github
-        run: |
-          git config --local user.email "admin@inbug.org"
-          git config --global user.name "inbug-team"
-          git commit -m "InCloud Report" -a --allow-empty
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+      - name: 'Send mail'
+        uses: dawidd6/action-send-mail@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          server_address: smtp.yandex.com
+          server_port: 465
+          #username: ${{ secrets.MAIL_USERNAME }}
+          #password: ${{ secrets.MAIL_PASSWORD }}
+          username: ${{secrets.SENTRY_MAIL_USERNAME}}
+          password: ${{secrets.SENTRY_MAIL_PASSWORD}}
+          subject: "您的订阅信息"
+          html_body: file://result.html
+          to: bin4xin.sentrylab@qq.com
+          #cc: chihou.pro@gmail.com
+          #from: 哨兵 -  ${{ env.REPORT_COMMIT }}
+          from: 哨兵 - 望远镜
+          content_type: text/html
+          attachments: ${{ env.searchDomain }}-attachments.tar.gz
+#      - name: Create local changes
+#        run: |
+#          git add output/active_ports.txt
+#          git add output/active_urls.txt
+#          git add output/dirout.csv
+#          git add output/webcrack.txt
+#
+#      - name: Commit results to Github
+#        run: |
+#          git config --local user.email "admin@inbug.org"
+#          git config --global user.name "inbug-team"
+#          git commit -m "InCloud Report" -a --allow-empty
+#      - name: Push changes
+#        uses: ad-m/github-push-action@master
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          branch: ${{ github.ref }}
