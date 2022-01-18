@@ -7,13 +7,15 @@ on:
         searchDomain:
           description: "Please enter the domain name to be scanned"
           required: true
-          default: "csleasing.com.cn"
+          default: "sentrylab.cn"
 env:
   searchDomain: "${{ github.event.inputs.searchDomain }}"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
@@ -24,7 +26,9 @@ jobs:
           go-version: 1.17
 
       - name: Setup Dependencies
-        run: sudo apt-get install libpcap-dev 
+        run: |
+          sudo apt-get install nmap
+          sudo apt-get install libpcap-dev
 
       - name: Cache Go
         id: cache-go
@@ -62,6 +66,9 @@ jobs:
       - name: Running naabu to check top 1000 ports
         run: |
           naabu -list output/active_subdomains.txt  -rate 10000 -top-ports 1000 | tee output/active_ports.txt
+          naabu -list output/active_subdomains.txt  -rate 10000 -nmap-cli 'nmap -v -sV -Pn -p- -oX output/active_ports.xml'
+          cat output/active_ports.txt
+          cat output/active_ports.xml
         shell: bash
 
 
@@ -110,24 +117,6 @@ jobs:
           html_body: file://result.html
           to: bin4xin.sentrylab@qq.com
           #cc: chihou.pro@gmail.com
-          #from: 哨兵 -  ${{ env.REPORT_COMMIT }}
           from: 哨兵 - 望远镜
           content_type: text/html
           attachments: ${{ env.searchDomain }}-attachments.tar.gz
-#      - name: Create local changes
-#        run: |
-#          git add output/active_ports.txt
-#          git add output/active_urls.txt
-#          git add output/dirout.csv
-#          git add output/webcrack.txt
-#
-#      - name: Commit results to Github
-#        run: |
-#          git config --local user.email "admin@inbug.org"
-#          git config --global user.name "inbug-team"
-#          git commit -m "InCloud Report" -a --allow-empty
-#      - name: Push changes
-#        uses: ad-m/github-push-action@master
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          branch: ${{ github.ref }}
