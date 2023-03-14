@@ -39,9 +39,10 @@ jobs:
         run: |
           export GOPATH=/opt/hostedtoolcache/go/1.14.15/
           export PATH=$PATH:$GOPATH/bin
-          export GOROOT=/usr/local/go
-          export PATH=$PATH:$GOROOT/bin
+          # export GOROOT=/usr/local/go
+          # export PATH=$PATH:$GOROOT/bin
           # nothing.
+          ls -la /usr/local/
           ls /opt/hostedtoolcache/go/1.14.15/
           go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
           go get -v github.com/projectdiscovery/dnsx/cmd/dnsx
