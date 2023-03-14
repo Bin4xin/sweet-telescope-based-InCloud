@@ -35,8 +35,14 @@ jobs:
 
       - name: Setting up ProjectDiscovery tools
         env:
-          GO111MODULE: on
+          GO111MODULE: off
         run: |
+          export GOPATH=/opt/hostedtoolcache/go/1.14.15/
+          export PATH=$PATH:$GOPATH/bin
+          export GOROOT=/usr/local/go
+          export PATH=$PATH:$GOROOT/bin
+          # nothing.
+          ls /opt/hostedtoolcache/go/1.14.15/
           go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
           go get -v github.com/projectdiscovery/dnsx/cmd/dnsx
           go get -v github.com/projectdiscovery/naabu/v2/cmd/naabu
