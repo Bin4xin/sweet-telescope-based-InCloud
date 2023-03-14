@@ -42,9 +42,9 @@ jobs:
           export GOROOT=/opt/hostedtoolcache/go/1.14.15/x64
           export PATH=$PATH:$GOROOT/bin
           # nothing.
-          ls -la /usr/local/
-          ls /opt/hostedtoolcache/go/1.14.15/
-          go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+          export
+          # ls /opt/hostedtoolcache/go/1.14.15/
+          # go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
           go get -v github.com/projectdiscovery/dnsx/cmd/dnsx
           go get -v github.com/projectdiscovery/naabu/v2/cmd/naabu
           go get -v github.com/projectdiscovery/httpx/cmd/httpx
