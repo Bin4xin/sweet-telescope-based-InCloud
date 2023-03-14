@@ -7,7 +7,7 @@ on:
       searchDomain:
         description: "Please enter the domain name to be scanned"
         required: true
-        default: "sentrylab.cn"
+        default: "[ip]"
 env:
   searchDomain: "${{ github.event.inputs.searchDomain }}"
 
