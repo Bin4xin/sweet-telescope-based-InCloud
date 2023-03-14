@@ -8,6 +8,8 @@ on:
         description: "Please enter the domain name to be scanned"
         required: true
         default: "sentrylab.cn"
+env:
+  searchDomain: "${{ github.event.inputs.searchDomain }}"
 
 jobs:
   build:
@@ -23,8 +25,6 @@ jobs:
 
       - name: Setup Dependencies
         run: sudo apt-get install libpcap-dev
-
-
 
       - name: Cache Go
         id: cache-go
@@ -48,6 +48,8 @@ jobs:
 
       - name: Running naabu to check top all ports
         run: |
+          echo "${{ env.searchDomain }}" > input/target.txt
+          cat input/target.txt
           naabu -iL input/target.txt  -rate 10000 -p - | tee output/active_ports.txt
         shell: bash
 
