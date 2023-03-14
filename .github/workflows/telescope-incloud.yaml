@@ -37,14 +37,13 @@ jobs:
         env:
           GO111MODULE: on
         run: |
-          export GOPATH=/opt/hostedtoolcache/go/1.14.15/
-          export PATH=$PATH:$GOPATH/bin
-          export GOROOT=/opt/hostedtoolcache/go/1.14.15/x64
-          export PATH=$PATH:$GOROOT/bin
+          # export GOPATH=/opt/hostedtoolcache/go/1.14.15/
+          # export PATH=$PATH:$GOPATH/bin
+          # export GOROOT=/opt/hostedtoolcache/go/1.14.15/x64
+          # export PATH=$PATH:$GOROOT/bin
           # nothing.
           export
           # ls /opt/hostedtoolcache/go/1.14.15/
-          # go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
           go get -v github.com/projectdiscovery/dnsx/cmd/dnsx
           go get -v github.com/projectdiscovery/naabu/v2/cmd/naabu
           go get -v github.com/projectdiscovery/httpx/cmd/httpx
